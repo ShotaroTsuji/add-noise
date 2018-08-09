@@ -7,8 +7,9 @@ A CLI program that adds noise to the input data.
 
 Adds noise to the input data. The noise level is given by the `--ratio` option.
 The noise level is the noise power ratio to the signal power. The signal power
-is defined as the variance of the input signal. The noise obeys the normal
-distribution N(0, ratio\*power).
+is defined as the variance of the input signal. The signal power is calculated
+for each coordinate of the signal. The noise obeys the normal distribution with
+average 0 and the variance `ratio*power`: N(0, ratio\*power).
 The input file is a text file of rows of float numbers. Each row is a comma-
 separated string of float numbers.
 
