@@ -111,13 +111,13 @@ where
     }
 }
 
-pub fn add_noise<T, S>(data: &mut [S], amplitude: T)
+pub fn add_noise<T, S>(data: &mut [S], ratio: T)
 where
     S: ::std::fmt::Debug + AsRef<[T]> + AsMut<[T]>,
     T: ::std::fmt::Debug + num_traits::Float,
 {
     let (_mean, mut var) = mean_variance(data);
-    vec_scalar_mul(&mut var[..], amplitude);
+    vec_scalar_mul(&mut var[..], ratio);
 
     let mut src = NoiseSource::new(&var[..]);
     for row in data.as_mut().iter_mut() {

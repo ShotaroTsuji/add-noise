@@ -1,9 +1,10 @@
-#[macro_use]
 extern crate clap;
 extern crate csv;
 extern crate either;
 
 extern crate add_noise;
+
+use clap::{App, Arg};
 
 use either::Either;
 
@@ -50,36 +51,51 @@ fn read_csv_file<R: std::io::BufRead>(stream: R) -> Vec<Vec<f64>> {
 }
 
 fn main() {
-    let matches = clap_app!(myapp =>
-        (version: "0.1.0")
-        (author: "Shotaro Tsuji <tsuji@sat.t.u-tokyo.ac.jp>")
-        (about: "add noise to data")
-        (@arg AMPLITUDE: -a --amplitude +required +takes_value "Noise amplitude ratio")
-        (@arg INPUT: "Input file path")
-    ).get_matches();
+    let matches = App::new("add-noise")
+        .version("0.1.0")
+        .author("Shotaro Tsuji <tsuji@sat.t.u-tokyo.ac.jp>")
+        .about("add noise to data")
+        .arg(
+            Arg::with_name("RATIO")
+                .short("r")
+                .long("ratio")
+                .required(true)
+                .takes_value(true)
+                .help("Noise power ratio to signal power"),
+        )
+        .arg(Arg::with_name("INPUT").index(1).help("Input file path"))
+        .long_about(
+            "\
+Adds noise to the input data. The noise level is given by the `--ratio` option.
+The noise level is the noise power ratio to the signal power. The signal power
+is defined as the variance of the input signal. The noise obeys the normal
+distribution N(0, ratio*power).
+The input file is a text file of rows of float numbers. Each row is a comma-
+separated string of float numbers.",
+        )
+        .get_matches();
 
-    let amplitude = matches
-        .value_of("AMPLITUDE")
-        .expect("Amplitude must be specified")
+    let ratio = matches
+        .value_of("RATIO")
+        .expect("Ratio must be specified")
         .parse::<f64>()
-        .expect("Percentage must be a float.");
+        .expect("Ratio must be a float.");
 
     let inputpath = matches.value_of("INPUT");
 
-    eprintln!("amplitude: {:?}", amplitude);
-    eprintln!("inputpath: {:?}", inputpath);
+    eprintln!("ratio: {:?}", ratio);
+    eprintln!("input: {:?}", inputpath);
 
     let stdin = io::stdin();
     let input = open_file_or_stdin(&inputpath, &stdin);
-    eprintln!("input: {:?}", input);
 
     let mut data = read_csv_file(input);
 
-    add_noise::add_noise(&mut data[..], amplitude);
+    add_noise::add_noise(&mut data[..], ratio);
 
     for row in data.iter() {
         for j in 0..row.len() {
-            let delim = if j < row.len()-1 { "," } else { "\n" };
+            let delim = if j < row.len() - 1 { "," } else { "\n" };
             print!("{}{}", row[j], delim);
         }
     }
