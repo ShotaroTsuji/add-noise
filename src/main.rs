@@ -1,3 +1,7 @@
+// Copyright 2018 Shotaro Tsuji
+// 
+// This software is licensed under the MIT License <https://opensource.org/licenses/MIT>
+
 extern crate clap;
 extern crate csv;
 extern crate either;

@@ -1,3 +1,7 @@
+// Copyright 2018 Shotaro Tsuji
+// 
+// This software is licensed under the MIT License <https://opensource.org/licenses/MIT>
+
 extern crate num_traits;
 extern crate rand;
 
