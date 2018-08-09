@@ -1,0 +1,11 @@
+[package]
+name = "add-noise"
+version = "0.1.0"
+authors = ["Shotaro Tsuji <Shotaro.Tsuji@gmail.com>"]
+
+[dependencies]
+rand = "0.5.5"
+csv = "1.0.0"
+clap = "2.32.0"
+either = "1.4"
+num-traits = "0.2"
